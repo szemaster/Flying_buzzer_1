@@ -1,0 +1,11 @@
+Release/system_stm32f0xx.o: \
+ C:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/CMSIS/Device/ST/STM32F0xx/Source/Templates/system_stm32f0xx.c \
+ C:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h \
+ C:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/CMSIS/Include/core_cm0.h \
+ d:\sysgcc\arm-eabi\lib\gcc\arm-eabi\4.9.2\include\stdint.h \
+ d:\sysgcc\arm-eabi\arm-eabi\sys-include\stdint.h \
+ d:\sysgcc\arm-eabi\arm-eabi\sys-include\machine\_default_types.h \
+ d:\sysgcc\arm-eabi\arm-eabi\sys-include\sys\features.h \
+ C:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/CMSIS/Include/core_cmInstr.h \
+ C:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/CMSIS/Include/core_cmFunc.h \
+ C:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/CMSIS/Device/ST/STM32F0xx/Include/system_stm32f0xx.h
