@@ -40,17 +40,49 @@ void VarioCC_DelayTIMInit(){
 	timerinitstruct.TIM_Period = DELAY_TIM_TICK_FREQ / DELAY_FREQ - 1;
 	TIM_TimeBaseInit(DELAY_TIM, &timerinitstruct);
 	TIM_ITConfig(DELAY_TIM, TIM_IT_Update, ENABLE);
+
+	VarioCC_DelayEnableInterrupts();
 }
 
-//Delays one unit of time. The length of the delay is determined in Vario_CC_board.h as DELAY_FREQ
-//(Delay in sec)=1/DELAY_FREQ
-//input: - delay: number of time units to delay
+//The function enables the NVIC lines for the timer that is used as "DELAY_TIM"
+void VarioCC_DelayEnableInterrupts(){
+	NVIC_InitTypeDef nvicinitstructure;
+	nvicinitstructure.NVIC_IRQChannel = DELAY_IRQN;
+	nvicinitstructure.NVIC_IRQChannelPriority = 2;
+	nvicinitstructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&nvicinitstructure);
+}
+
+//This is a blocking wait funcion. The program can't get over until the delaytime expires.
+//input: delay: time to be delayed. Its unit is equal to (1/"DELAY_FREQ") is sec.
+//Note: to be able to use this function, first of all you should call "VarioCC_DelayTIMInit()" function
 void VarioCC_Delay(uint16_t delay){
 	TIM_SetCounter(DELAY_TIM, 0);
+	intcounter = delay;
 	TIM_Cmd(DELAY_TIM, ENABLE);
-	for (; delay > 0; delay--){
-		while (TIM_GetITStatus(DELAY_TIM, TIM_IT_Update) == RESET){ ; }
-		TIM_ClearITPendingBit(DELAY_TIM, TIM_IT_Update);
+	while (intcounter > 0){
+		asm("nop");
 	}
 	TIM_Cmd(DELAY_TIM, DISABLE);
+}
+
+//This is a non-blocking timer function. You can do anything else, until the specified time expires.
+//input: delay: time to be delayed. Its unit is equal to (1/"DELAY_FREQ") is sec.
+//     "intcounter" is going to be 0, if the specified time has elapsed. 
+//      intcounter is a volatile variable defined in "Vario_CC_board.h"
+//Note: to be able to use this function, first of all you should call "VarioCC_DelayTIMInit()" function
+void VarioCC_NonBlockingDelay_Start(uint16_t delay){
+	TIM_Cmd(DELAY_TIM, DISABLE);
+	TIM_SetCounter(DELAY_TIM, 0);
+	intcounter = delay;
+	TIM_Cmd(DELAY_TIM, ENABLE);
+}
+
+//Interrupt funcion for "VarioCC_Delay" and for "VarioCC_NonBlockingDelay_Start" functions
+void TIM14_IRQHandler(){
+	if (TIM_GetITStatus(DELAY_TIM, TIM_IT_Update) != RESET){
+		TIM_ClearITPendingBit(DELAY_TIM, TIM_IT_Update);
+		if (intcounter>0)
+			intcounter--;
+	}
 }

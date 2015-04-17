@@ -14,6 +14,9 @@
 #define TIM_PULSETICK_FREQ                       1000
 #define TIM_PULSECHANNELCOMPARE                  70         //the channel will be on (or actually off) \ 
                                                              //(TIM_PULSECHANNELCOMPARE/TIM_PULSETICK_FREQ) sec long
+volatile uint32_t intbuzzcounter;
+volatile uint8_t intbuzzenable;
+volatile uint16_t intbuzzthreshold;
 
 void BuzzerGPIOInit();
 void BuzzerTimerInit(uint32_t timclock, uint16_t freq);

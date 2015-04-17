@@ -3,10 +3,16 @@
 
 void PressureSensor_Init(){
 	I2CLine_Init(I2C_I2C_USED);
+
 	VarioCC_DelayTIMInit();
+
+	VarioCC_Delay(PRESS_SENS_STARTUPTIME);
 	PressureSensor_Reset();
+
 	VarioCC_Delay(PRESS_SENS_STARTUPTIME);
 	PRESS_SENS_READ_CALIBR_DATA();
+
+    BMP180_READ_UP_START(PRESS_SENS_RESOLUTION);
 }
 
 //reads the the uncompensated temerature value and calcuates the real temperature value
@@ -17,7 +23,7 @@ short PressureSensor_GetRealTempr(){
 
 //reads the the uncompensated pressure value and calcuates the real pressure value
 long PressureSensor_GetRealPressure(){
-	PRESS_SENS_GET_UPRESS(PRESS_SENS_RESOLUTION);
+	PRESS_SENS_GET_UPRESS();
 	return PRESS_SENS_CALC_REALPRESSURE(PRESS_SENS_RESOLUTION);
 }
 
@@ -26,38 +32,46 @@ void PressureSensor_Reset(){
 	I2CLine_Write(I2C_I2C_USED, PRESS_SENS_DEV_ADDR, PRESS_SENS_RESET_ADDR, PRESS_SENS_RESET_COMMAND);
 }
 
-void PressureSense_Main(){
-	uint32_t pressure;
-//	static uint16_t cnt = 0;
+//This function checks if it's time to remeasure the temperature and if it is, than it remeasures the temperature.
+void PressureSensor_GetUTIfNeeded(){
 	static uint8_t i = PRESS_SENS_FREQOFTEMPRMEASUREMENT;
-	float velocity;
 	if (i == PRESS_SENS_FREQOFTEMPRMEASUREMENT){
 		PRESS_SENS_GET_UTEMPR();
 		i = 0;
 	}
 	i++;
-	pressure = PressureSensor_GetRealPressure();
-//	datap[cnt++] = pressure;
-	PressureSense_InsertData(pressure);
-	velocity = PressureSense_CalculateVelocity_Fast();
-	if (velocity > PRESS_SENS_LIMIT_FAST || velocity < (-PRESS_SENS_LIMIT_FAST)){
-//ezek itt abszolút buta értékek
-		BuzzerEnable(ENABLE);
-		PulseSetFreq(5);
+}
+
+void PressureSense_Main(){
+	uint32_t pressure;
+//	static uint16_t cnt = 0;
+	float velocity;
+	if (intcounter == 0){
+
+		pressure = PressureSensor_GetRealPressure();
+		//	datap[cnt++] = pressure;
+		PressureSense_InsertData(pressure);
+		velocity = PressureSense_CalculateVelocity_Fast();
+		PressureSensor_GetUTIfNeeded();
+		PRESS_SENS_START_UPMEAS(PRESS_SENS_RESOLUTION);
+		/*if (velocity > PRESS_SENS_LIMIT_FAST || velocity < (-PRESS_SENS_LIMIT_FAST)){
+	//ezek itt abszolút buta értékek
+	BuzzerEnable(ENABLE);
+	PulseSetFreq(5);
 	}
 	/*else{
-		velocity = PressureSense_CalculateVelocity_Slow();
-		if (velocity>PRESS_SENS_LIMIT_SLOW || velocity < (-PRESS_SENS_LIMIT_SLOW)){
-			//ezek itt abszolút buta értékek
-			TIM_Cmd(PULSE_TIM, ENABLE);
-			PulseSetFreq(10);
-		}
-		*/else{
-			BuzzerEnable(DISABLE);
-		//}
+	velocity = PressureSense_CalculateVelocity_Slow();
+	if (velocity>PRESS_SENS_LIMIT_SLOW || velocity < (-PRESS_SENS_LIMIT_SLOW)){
+	//ezek itt abszolút buta értékek
+	TIM_Cmd(PULSE_TIM, ENABLE);
+	PulseSetFreq(10);
 	}
+	else{
+	BuzzerEnable(DISABLE);
+	//}
+	}*/
 
-
+	}
 }
 
 void PressureSense_InsertData(uint32_t newdata){

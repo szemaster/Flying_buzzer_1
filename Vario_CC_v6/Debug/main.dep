@@ -10,8 +10,8 @@ Debug/main.o: main.c Buzzer.h Vario_CC_board.h \
  C:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/CMSIS/Include/core_cmFunc.h \
  C:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/CMSIS/Device/ST/STM32F0xx/Include/system_stm32f0xx.h \
  C:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/STM32F0xx_StdPeriph_Driver/inc/stm32f0xx_tim.h \
- C:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/STM32F0xx_StdPeriph_Driver/inc/stm32f0xx_gpio.h \
  C:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/STM32F0xx_StdPeriph_Driver/inc/stm32f0xx_misc.h \
+ C:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/STM32F0xx_StdPeriph_Driver/inc/stm32f0xx_gpio.h \
  PowerLed.h \
  C:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/STM32F0xx_StdPeriph_Driver/inc/stm32f0xx_adc.h \
  PressureSensor.h BMP180_api.h I2C_extension.h \

@@ -4,7 +4,7 @@
 #include "I2C_extension.h"
 
 #define BMP180_DEV_ADDR                0xEE
-#define BMP180_STARTUPTIME             50  // in ms
+#define BMP180_STARTUPTIME             100  // in ms
 
 #define BMP180_WAIT_UT                 5   //waiting time in ms
 #define BMP180_WAIT_UP_LOWPOWER        5   //...WAIT_UP values must be under 256,
@@ -19,6 +19,7 @@
 #define BMP_WRITE(I2Cx, device_addr, register_addr, register_data) \
 	I2CLine_Write(I2Cx, device_addr, register_addr, register_data)
 #define DELAY(MSEC)                    VarioCC_Delay(MSEC)
+#define DELAY_NONBLOCKING(MSEC)        VarioCC_NonBlockingDelay_Start(MSEC)
 
 
 //oversampling settings
@@ -86,7 +87,8 @@ volatile BMP180_CTRL_TypeDef                    BMP180_CTRLREGS;
 
 void BMP180_READ_CALDATA();
 void BMP180_READ_UT();
-void BMP180_READ_UP(unsigned char oss);
+void BMP180_READ_UP_START(unsigned char oss);
+void BMP180_READ_UP_END();
 short BMP180_CALC_TEMP();
 long BMP180_CALC_PRESS(unsigned char oss);
 

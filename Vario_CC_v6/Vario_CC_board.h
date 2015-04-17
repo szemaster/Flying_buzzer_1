@@ -3,6 +3,7 @@
 
 #include "stm32f0xx_rcc.h"
 #include "stm32f0xx_tim.h"
+#include "stm32f0xx_misc.h"                                  //it contains the nvic corresponding functions
 
 //common
 #define GPIO_SPEED_USED                   GPIO_Speed_2MHz
@@ -76,10 +77,15 @@
 #define DELAY_RCC_TIM_CMD(NEWSTATE)       RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM14, NEWSTATE)
 #define DELAY_TIM_TICK_FREQ               100000
 #define DELAY_FREQ                        1000         // Delay time is 1/DELAY_FREQ if you call the function VarioCC_Delay(1)
+#define DELAY_IRQN                        TIM14_IRQn
 
+volatile uint32_t intcounter;
 
 uint32_t VarioCC_GetTimBusClockFreq();
+void VarioCC_DelayEnableInterrupts();
 void VarioCC_DelayTIMInit();
 void VarioCC_Delay(uint16_t delay);
+void VarioCC_NonBlockingDelay_Start(uint16_t delay);
+void TIM14_IRQHandler();
 
 #endif /* VARIO_CC_BOARD_H_ */

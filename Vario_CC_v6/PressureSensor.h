@@ -10,8 +10,9 @@
 #define PRESS_SENS_READ_CALIBR_DATA()        BMP180_READ_CALDATA()
 #define	PRESS_SENS_GET_UTEMPR()              BMP180_READ_UT()
 #define PRESS_SENS_CALC_REALTEMP()           BMP180_CALC_TEMP()
-#define PRESS_SENS_GET_UPRESS(OSS)           BMP180_READ_UP(OSS)
+#define PRESS_SENS_GET_UPRESS()              BMP180_READ_UP_END()
 #define PRESS_SENS_CALC_REALPRESSURE(OSS)    BMP180_CALC_PRESS(OSS)
+#define PRESS_SENS_START_UPMEAS(OSS)         BMP180_READ_UP_START(OSS)
 
 #define PRESS_SENS_RESOLUTION                BMP180_OSS_ULTRAHIGHRES
 #define PRESS_SENS_RESET_ADDR                BMP180_ADDR_SOFT_RESET
@@ -43,6 +44,8 @@ void PressureSensor_Reset();
 void PressureSensor_Init();
 short PressureSensor_GetRealTempr();
 long PressureSensor_GetRealPressure();
+
+void PressureSensor_GetUTIfNeeded();
 
 void PressureSense_Main();
 //These functions are responsible for calculating the vertical velocity

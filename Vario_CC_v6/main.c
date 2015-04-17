@@ -4,6 +4,7 @@
 
 int main()
 {
+	int i = 0;
 	/*short temp;
 	long pressure;*/
 	//unsigned char data[2];
@@ -12,12 +13,13 @@ int main()
 	PowerLed_Init();
 //	VarioCC_DelayTIMInit();
 	PressureSensor_Init();
-	PulseInit(10);
+	PulseInit(1);
 
 	while (1)
 	{
-		/*VarioCC_Delay(2000);
-		BuzzerTimerandChannelReInit(TIM_BUZZOVERFLOW_FREQ_LOW);*/
+		++i;
+//		VarioCC_Delay(2000);
+		//BuzzerTimerandChannelReInit(TIM_BUZZOVERFLOW_FREQ_LOW);
 		PowerLed_Main();
 		/*temp = PressureSensor_GetRealTempr();
 		pressure = PressureSensor_GetRealPressure();*/

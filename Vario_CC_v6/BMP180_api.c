@@ -56,41 +56,42 @@ short BMP180_CALC_TEMP(){
 	return temperature;
 }
 
-//Reads out the uncompensated pressure value
-//input: - unsigned char oss: oversapmling setting
-//             typical values of oss:     BMP180_OSS_LOWPOWER
-//                                        BMP180_OSS_STANDARD
-//                                        BMP180_OSS_HIGHRES
-//                                        BMP180_OSS_ULTRAHIGHRES
-//     the uncompensated pressure value will be stored in BMP180_CTRLREGS.MSB, BMP180_CTRLREGS.LSB and BMP180_CTRLREGS.XLSB (defined in BMP180_api.h)
-void BMP180_READ_UP(unsigned char oss){
-	volatile unsigned char data[3];
-	unsigned char delaytime;
-
+//The function starts a conversion for pressure measurement
+//If you define "DELAY_NONBLOCKING(...)" as a timer that uses interrupt
+//    then you can do anything else, while the sensor executes the conversion
+//To get the results of this conversion, use "BMP180_READ_UP_END()" function
+//input: oss: specifies the resoluion mode
+//            BMP180_OSS_LOWPOWER; BMP180_OSS_STANDARD; BMP180_OSS_HIGHRES; BMP180_OSS_ULTRAHIGHRES
+void BMP180_READ_UP_START(unsigned char oss){
 	BMP_WRITE(I2C_USED, BMP180_DEV_ADDR, BMP180_ADDR_CTRL_MEAS, BMP180_COM_CTRL_MEAS_PRESS | (oss << BMP180_BIT_CTRL_MEAS_OSS_SHIFT));
-
+	
 	switch (oss){
 	case BMP180_OSS_LOWPOWER:
-		delaytime = BMP180_WAIT_UP_LOWPOWER;
+		DELAY_NONBLOCKING(BMP180_WAIT_UP_LOWPOWER);
 		break;
 	case BMP180_OSS_STANDARD:
-		delaytime = BMP180_WAIT_UP_STANDARD;
+		DELAY_NONBLOCKING(BMP180_WAIT_UP_STANDARD);
 		break;
 	case BMP180_OSS_HIGHRES:
-		delaytime = BMP180_WAIT_UP_HIHGRES;
+		DELAY_NONBLOCKING(BMP180_WAIT_UP_HIHGRES);
 		break;
 	case BMP180_OSS_ULTRAHIGHRES:
-		delaytime = BMP180_WAIT_UP_ULTRAHIGHRES;
+		DELAY_NONBLOCKING(BMP180_WAIT_UP_ULTRAHIGHRES);
 		break;
 	}
-
-	DELAY(delaytime);
-
-	BMP_READ(I2C_USED, BMP180_DEV_ADDR, BMP180_ADDR_OUT_MSB, data, 3);
-	BMP180_CTRLREGS.MSB = data[0];
-	BMP180_CTRLREGS.LSB = data[1];
-	BMP180_CTRLREGS.XLSB = data[2];
 }
+
+//The funcion gets the result of the last pressureconversion.
+//The uncompensated pressure value will be stored in BMP180_CTRLREGS.MSB, BMP180_CTRLREGS.LSB and BMP180_CTRLREGS.XLSB (defined in BMP180_api.h)
+void BMP180_READ_UP_END(){
+	volatile unsigned char data[3];
+	static int y = 0;
+		BMP_READ(I2C_USED, BMP180_DEV_ADDR, BMP180_ADDR_OUT_MSB, data, 3);
+		BMP180_CTRLREGS.MSB = data[0];
+		BMP180_CTRLREGS.LSB = data[1];
+		BMP180_CTRLREGS.XLSB = data[2];
+}
+
 
 //calculates valid pressure from uncompnsated pressure
 //input: - unsigned char oss
