@@ -67,7 +67,7 @@ void VarioCC_Delay(uint16_t delay){
 }
 
 //This is a non-blocking timer function. You can do anything else, until the specified time expires.
-//input: delay: time to be delayed. Its unit is equal to (1/"DELAY_FREQ") is sec.
+//input: delay: time to be delayed. Its unit is equal to (1/"DELAY_FREQ") in sec.
 //     "intcounter" is going to be 0, if the specified time has elapsed. 
 //      intcounter is a volatile variable defined in "Vario_CC_board.h"
 //Note: to be able to use this function, first of all you should call "VarioCC_DelayTIMInit()" function

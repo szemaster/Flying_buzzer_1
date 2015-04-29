@@ -17,8 +17,8 @@ void BuzzerGPIOInit(){
 
 	gpioinitstruct.GPIO_Pin = BUZZ_PIN_NEG;
 	gpioinitstruct.GPIO_Mode = GPIO_Mode_AF;
-	gpioinitstruct.GPIO_OType = GPIO_OType_PP;
-	gpioinitstruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	gpioinitstruct.GPIO_OType = GPIO_OType_OD;
+	gpioinitstruct.GPIO_PuPd = GPIO_PuPd_UP;
 	gpioinitstruct.GPIO_Speed = GPIO_SPEED_USED;
 	GPIO_Init(BUZZ_GPIO_NEG, &gpioinitstruct);
 	gpioinitstruct.GPIO_Pin = BUZZ_PIN_POS;

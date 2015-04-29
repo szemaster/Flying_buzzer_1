@@ -17,14 +17,15 @@ int main()
 
 	while (1)
 	{
-		++i;
-//		VarioCC_Delay(2000);
-		//BuzzerTimerandChannelReInit(TIM_BUZZOVERFLOW_FREQ_LOW);
-		PowerLed_Main();
-		/*temp = PressureSensor_GetRealTempr();
-		pressure = PressureSensor_GetRealPressure();*/
-		PressureSense_Main();
-		/*VarioCC_Delay(2000);
-		BuzzerTimerandChannelReInit(TIM_BUZZOVERFLOW_FREQ_HIGH);*/
+
+	//		VarioCC_Delay(2000);
+	//BuzzerTimerandChannelReInit(TIM_BUZZOVERFLOW_FREQ_LOW);
+//	PowerLed_Main();
+	/*temp = PressureSensor_GetRealTempr();
+	pressure = PressureSensor_GetRealPressure();*/
+	PressureSense_Main();
+	/*VarioCC_Delay(2000);
+	BuzzerTimerandChannelReInit(TIM_BUZZOVERFLOW_FREQ_HIGH);*/
+
 	}
 }

@@ -45,33 +45,45 @@ void PressureSensor_GetUTIfNeeded(){
 void PressureSense_Main(){
 	uint32_t pressure;
 //	static uint16_t cnt = 0;
+//	static int i=0;
 	float velocity;
-	if (intcounter == 0){
-
-		pressure = PressureSensor_GetRealPressure();
-		//	datap[cnt++] = pressure;
-		PressureSense_InsertData(pressure);
-		velocity = PressureSense_CalculateVelocity_Fast();
-		PressureSensor_GetUTIfNeeded();
-		PRESS_SENS_START_UPMEAS(PRESS_SENS_RESOLUTION);
-		/*if (velocity > PRESS_SENS_LIMIT_FAST || velocity < (-PRESS_SENS_LIMIT_FAST)){
-	//ezek itt abszolút buta értékek
-	BuzzerEnable(ENABLE);
-	PulseSetFreq(5);
-	}
-	/*else{
-	velocity = PressureSense_CalculateVelocity_Slow();
-	if (velocity>PRESS_SENS_LIMIT_SLOW || velocity < (-PRESS_SENS_LIMIT_SLOW)){
-	//ezek itt abszolút buta értékek
-	TIM_Cmd(PULSE_TIM, ENABLE);
-	PulseSetFreq(10);
-	}
-	else{
-	BuzzerEnable(DISABLE);
-	//}
+	/*if (i == 0){
+		GPIO_SetBits(PLED_GPIO, PLED_PIN);
 	}*/
 
+		if (intcounter == 0){
+			//i++;
+			pressure = PressureSensor_GetRealPressure();
+			//	datap[cnt++] = pressure;
+			PressureSense_InsertData(pressure);
+			//velocity = PressureSense_CalculateVelocity_Fast();
+			velocity = PressureSense_CalculateVelocity_VerySlow();
+			//velocity = PressureSense_CalculateVelocity_Slow();
+			PressureSensor_GetUTIfNeeded();
+			PRESS_SENS_START_UPMEAS(PRESS_SENS_RESOLUTION);
+
+			/*if (velocity > PRESS_SENS_LIMIT_FAST || velocity < (-PRESS_SENS_LIMIT_FAST)){
+		//ezek itt abszolút buta értékek
+		BuzzerEnable(ENABLE);
+		PulseSetFreq(5);
+		}
+		/*else{
+		velocity = PressureSense_CalculateVelocity_Slow();
+		if (velocity>PRESS_SENS_LIMIT_SLOW || velocity < (-PRESS_SENS_LIMIT_SLOW)){
+		//ezek itt abszolút buta értékek
+		TIM_Cmd(PULSE_TIM, ENABLE);
+		PulseSetFreq(10);
+		}
+		else{
+		BuzzerEnable(DISABLE);
+		//}
+		}*/
+	
 	}
+	/*if (i == 1999){
+		GPIO_ResetBits(PLED_GPIO, PLED_PIN);
+	}*/
+
 }
 
 void PressureSense_InsertData(uint32_t newdata){
@@ -82,37 +94,16 @@ void PressureSense_InsertData(uint32_t newdata){
 	pressens_pressarray[0] = newdata;
 }
 
-/*void PressureSense_InsertData(uint16_t length, uint32_t dataarray[], uint32_t newdata){
-	uint16_t i;
-	for (i = 0; i < (length - 1); i++){
-		dataarray[i] = dataarray[i + 1];
-	}
-	dataarray[i] = newdata;
-}*/
 
-/*void PressureSense_InsertDataAll(uint32_t newdata){
-	PressureSense_InsertData(PRESS_SENS_DATAPOINTNUM_FAST, pressens_pressarray_fast, newdata);
-	PressureSense_InsertData(PRESS_SENS_DATAPOINTNUM_SLOW, pressens_pressarray_slow, newdata);
-}*/
-
-uint32_t PressureSense_CalculateSumXiTYi(uint16_t length){
+uint64_t PressureSense_CalculateSumXiTYi(uint16_t length){
 	uint16_t i = 0;
-	uint32_t result = 0;
+	uint64_t result = 0;
 	for (i = length; i > 0; i--){
 		result += pressens_pressarray[i-1] * (length - (i-1));
 	}
 	return result;
 }
 
-/*//calculates the value of sum(Xi*Yi) from i=1 to i=length
-uint32_t PressureSense_CalculateSumXiTYi(uint16_t length, uint32_t dataarray[]){
-	uint16_t i = 0;
-	uint32_t result = 0;
-	for (; i < length; i++){
-		result += dataarray[i] * (i + 1);
-	}
-	return result;
-}*/
 
 float PressureSense_CalculateAvgYi(uint16_t length){
 	uint16_t i = 0;
@@ -125,21 +116,10 @@ float PressureSense_CalculateAvgYi(uint16_t length){
 	return avg;
 }
 
-/*//calculates the average of last pressure value "length" long
-float PressureSense_CalculateAvgYi(uint16_t length, uint32_t dataarray[]){
-	uint16_t i = 0;
-	uint32_t sum = 0;
-	float avg = 0;
-	for (; i < length; i++){
-		sum += dataarray[i];
-	}
-	avg = (float)sum/(float)length;
-	return avg;
-}*/
 
 //calculates the vertical velocity according to the last few pressure values (lats few ic defined as "PRESS_SENS_DATAPOINTNUM_FAST")
 float PressureSense_CalculateVelocity_Fast(){
-	uint32_t sumxityi;                      //means: sum(xi*yi)
+	uint64_t sumxityi;                      //means: sum(xi*yi)
 	float yiavg;
 	float velocity;
 	static int i = 1;
@@ -148,35 +128,57 @@ float PressureSense_CalculateVelocity_Fast(){
 	velocity = ((float)yiavg*PRESS_SENS_CALC_SUMXI_FAST - (float)sumxityi) / ((float)(PRESS_SENS_CALC_XAVGTIMESSUM_FAST - (float)PRESS_SENS_CALC_SUMXISQUARED_FAST));
 	
 
-		if (i++ >= 75)//{
-		asm("nop");
-/*		datav[i - 75] = velocity;
+		if (i >= 300){
+//		asm("nop");
+		VELOCITY[i - 300] = velocity*1000;
 	}
 	i++;
-	if (i == 400){
+	if (i == 1600){
 		asm("nop");
-	}*/
+	}
 	return velocity;
 }
 
 //calculates the vertical velocity according to the last few pressure values (lats few ic defined as "PRESS_SENS_DATAPOINTNUM_SLOW")
 float PressureSense_CalculateVelocity_Slow(){
-	uint32_t sumxityi;                      //means: sum(xi*yi)
+	uint64_t sumxityi;                      //means: sum(xi*yi)
 	float yiavg;
 	float velocity;
-//static int i = 1;
-	sumxityi = PressureSense_CalculateSumXiTYi2(PRESS_SENS_DATAPOINTNUM_SLOW);
-	yiavg = PressureSense_CalculateAvgYi2(PRESS_SENS_DATAPOINTNUM_SLOW);
+	static int i = 1;
+	sumxityi = PressureSense_CalculateSumXiTYi(PRESS_SENS_DATAPOINTNUM_SLOW);
+	yiavg = PressureSense_CalculateAvgYi(PRESS_SENS_DATAPOINTNUM_SLOW);
 	velocity = ((float)yiavg*PRESS_SENS_CALC_SUMXI_SLOW - (float)sumxityi) / ((float)(PRESS_SENS_CALC_XAVGTIMESSUM_SLOW - (float)PRESS_SENS_CALC_SUMXISQUARED_SLOW));
 
 	
 
-/*	if (i >= 150){
-		asm("nop");
-		datav[i - 150] = velocity;
+	if (i >= 375){
+		VELOCITY[i - 375] = velocity * 1000;
 	}
 	i++;
-	if (i == 400){
+	if (i == 1675){
+		asm("nop");
+	}
+	return velocity;
+}
+
+float PressureSense_CalculateVelocity_VerySlow(){
+	uint64_t sumxityi;                      //means: sum(xi*yi)
+	float yiavg;
+	float velocity;
+static int i = 1;
+	sumxityi = PressureSense_CalculateSumXiTYi(PRESS_SENS_DATAPOINTNUM_VERYSLOW);
+	yiavg = PressureSense_CalculateAvgYi(PRESS_SENS_DATAPOINTNUM_VERYSLOW);
+	velocity = ((double)yiavg*PRESS_SENS_CALC_SUMXI_VERYSLOW - (double)sumxityi) / ((double)(PRESS_SENS_CALC_XAVGTIMESSUM_VERYSLOW - (double)PRESS_SENS_CALC_SUMXISQUARED_VERYSLOW));
+	
+	/*if (i++ >= 300){
+		asm("nop");
+	}*/
+
+/*	if (i >= 800){
+		VELOCITY[i - 800] = velocity * 1000;
+	}
+	i++;
+	if (i == 2100){
 		asm("nop");
 	}*/
 	return velocity;
