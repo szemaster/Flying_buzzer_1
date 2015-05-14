@@ -37,6 +37,7 @@ void PressureSensor_GetUTIfNeeded(){
 	static uint8_t i = PRESS_SENS_FREQOFTEMPRMEASUREMENT;
 	if (i == PRESS_SENS_FREQOFTEMPRMEASUREMENT){
 		PRESS_SENS_GET_UTEMPR();
+		PRESS_SENS_CALC_REALTEMP();
 		i = 0;
 	}
 	i++;
@@ -45,7 +46,8 @@ void PressureSensor_GetUTIfNeeded(){
 void PressureSense_Main(){
 	uint32_t pressure;
 //	static uint16_t cnt = 0;
-//	static int i=0;
+	static int i=0;
+	static uint16_t startuptime = 0;
 	float velocity;
 	/*if (i == 0){
 		GPIO_SetBits(PLED_GPIO, PLED_PIN);
@@ -56,33 +58,118 @@ void PressureSense_Main(){
 			pressure = PressureSensor_GetRealPressure();
 			//	datap[cnt++] = pressure;
 			PressureSense_InsertData(pressure);
-			//velocity = PressureSense_CalculateVelocity_Fast();
-			velocity = PressureSense_CalculateVelocity_VerySlow();
-			//velocity = PressureSense_CalculateVelocity_Slow();
+			if (startuptime > PRESS_SENS_STARTUPTIME){
+				if (i++ == 8){
+					PressureSense_DetermineVelocity();
+					i = 0;
+				}
+			}
+			else{
+				startuptime++;
+			}
 			PressureSensor_GetUTIfNeeded();
-			PRESS_SENS_START_UPMEAS(PRESS_SENS_RESOLUTION);
-
-			/*if (velocity > PRESS_SENS_LIMIT_FAST || velocity < (-PRESS_SENS_LIMIT_FAST)){
-		//ezek itt abszolút buta értékek
-		BuzzerEnable(ENABLE);
-		PulseSetFreq(5);
-		}
-		/*else{
-		velocity = PressureSense_CalculateVelocity_Slow();
-		if (velocity>PRESS_SENS_LIMIT_SLOW || velocity < (-PRESS_SENS_LIMIT_SLOW)){
-		//ezek itt abszolút buta értékek
-		TIM_Cmd(PULSE_TIM, ENABLE);
-		PulseSetFreq(10);
-		}
-		else{
-		BuzzerEnable(DISABLE);
-		//}
-		}*/
-	
+			PRESS_SENS_START_UPMEAS(PRESS_SENS_RESOLUTION);			
 	}
 	/*if (i == 1999){
 		GPIO_ResetBits(PLED_GPIO, PLED_PIN);
 	}*/
+
+}
+
+//Determines which velocity (fast/slow) should be used for the calculation of the beeping frequency
+void PressureSense_DetermineVelocity(){
+	static char slowingdown = 0;
+	int32_t velofast, veloslow;
+	char positive = 1;
+static int i = 0;
+
+	velofast = PressureSense_CalculateVelocity_Fast();
+	VELOCITYFAST[i] = velofast;
+	if (velofast < 0){
+		velofast = velofast * (-1);
+		positive = 0;
+	}
+	else{
+		positive = 1;
+	}
+	if (velofast > PRESS_SENS_LIMIT_FAST){
+		slowingdown = 0;
+		PressureSense_BuzzerControl(velofast, positive);
+	}
+	else{
+		veloslow = PressureSense_CalculateVelocity_Slow();
+		VELOCITYSLOW[i] = veloslow;
+		if (veloslow<0){
+			veloslow = veloslow * (-1);
+			positive = 0;
+		}
+		else{
+			positive = 1;
+		}
+		if (veloslow > PRESS_SENS_LIMIT_SLOW && veloslow < PRESS_SENS_LIMIT_FAST){
+			if (velofast > veloslow){
+				slowingdown = 0;
+			}
+			if (slowingdown == 0){
+				PressureSense_BuzzerControl(veloslow, positive);
+			}
+			else if (slowingdown == 1 && velofast > PRESS_SENS_LIMIT_SLOW){
+				PressureSense_BuzzerControl(velofast, positive);
+			}
+		}
+		else if (veloslow > PRESS_SENS_LIMIT_FAST){
+			slowingdown = 1;
+			PressureSense_BuzzerControl(velofast, positive);
+		}
+		else if (veloslow < PRESS_SENS_LIMIT_SLOW){
+			slowingdown = 0;
+			intbuzzenable = DISABLE;
+		}
+	}
+//	i++;
+	if (i == 650){
+		for (;;){
+			asm("nop");
+		}
+	}
+}
+
+void PressureSense_BuzzerControl(int32_t velocity, char positive){
+	static char posold = 1;
+
+	if (positive == 0 && posold == 1){
+		BuzzerInit(TIM_BUZZOVERFLOW_FREQ_HIGH);
+		posold = positive;
+	}
+	else if (positive == 1 && posold == 0){
+		BuzzerInit(TIM_BUZZOVERFLOW_FREQ_LOW);
+		posold = positive;
+	}
+	if (velocity < 100){
+		intbuzzenable = DISABLE;
+	}
+	else{
+		if (velocity < 200)
+			intbuzzthreshold = 25;
+		else if (velocity < 300)
+			intbuzzthreshold = 20;
+		else if (velocity < 400)
+			intbuzzthreshold = 16;
+		else if (velocity < 500)
+			intbuzzthreshold = 13;
+		else if (velocity < 600)
+			intbuzzthreshold = 11;
+		else if (velocity < 700)
+			intbuzzthreshold = 9;
+		else if (velocity < 800)
+			intbuzzthreshold = 7;
+		else if (velocity < 900)
+			intbuzzthreshold = 6;
+		else if (velocity < 1000)
+			intbuzzthreshold = 5;
+		else intbuzzthreshold = 4;
+		intbuzzenable = ENABLE;
+	}
 
 }
 
@@ -118,7 +205,7 @@ float PressureSense_CalculateAvgYi(uint16_t length){
 
 
 //calculates the vertical velocity according to the last few pressure values (lats few ic defined as "PRESS_SENS_DATAPOINTNUM_FAST")
-float PressureSense_CalculateVelocity_Fast(){
+int32_t PressureSense_CalculateVelocity_Fast(){
 	uint64_t sumxityi;                      //means: sum(xi*yi)
 	float yiavg;
 	float velocity;
@@ -128,19 +215,19 @@ float PressureSense_CalculateVelocity_Fast(){
 	velocity = ((float)yiavg*PRESS_SENS_CALC_SUMXI_FAST - (float)sumxityi) / ((float)(PRESS_SENS_CALC_XAVGTIMESSUM_FAST - (float)PRESS_SENS_CALC_SUMXISQUARED_FAST));
 	
 
-		if (i >= 300){
+	/*	if (i >= 300){
 //		asm("nop");
 		VELOCITY[i - 300] = velocity*1000;
 	}
 	i++;
 	if (i == 1600){
 		asm("nop");
-	}
-	return velocity;
+	}*/
+	return velocity*1000;
 }
 
 //calculates the vertical velocity according to the last few pressure values (lats few ic defined as "PRESS_SENS_DATAPOINTNUM_SLOW")
-float PressureSense_CalculateVelocity_Slow(){
+int32_t PressureSense_CalculateVelocity_Slow(){
 	uint64_t sumxityi;                      //means: sum(xi*yi)
 	float yiavg;
 	float velocity;
@@ -151,17 +238,17 @@ float PressureSense_CalculateVelocity_Slow(){
 
 	
 
-	if (i >= 375){
+	/*if (i >= 375){
 		VELOCITY[i - 375] = velocity * 1000;
 	}
 	i++;
 	if (i == 1675){
 		asm("nop");
-	}
-	return velocity;
+	}*/
+	return velocity*1000;
 }
 
-float PressureSense_CalculateVelocity_VerySlow(){
+int32_t PressureSense_CalculateVelocity_VerySlow(){
 	uint64_t sumxityi;                      //means: sum(xi*yi)
 	float yiavg;
 	float velocity;
@@ -181,5 +268,14 @@ static int i = 1;
 	if (i == 2100){
 		asm("nop");
 	}*/
-	return velocity;
+	return velocity*1000;
+}
+
+//Interrupt funcion for "VarioCC_Delay" and for "VarioCC_NonBlockingDelay_Start" functions
+void TIM14_IRQHandler(){
+	if (TIM_GetITStatus(DELAY_TIM, TIM_IT_Update) != RESET){
+		TIM_ClearITPendingBit(DELAY_TIM, TIM_IT_Update);
+		if (intcounter>0)
+			intcounter--;
+	}
 }

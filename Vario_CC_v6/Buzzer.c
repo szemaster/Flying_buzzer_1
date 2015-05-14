@@ -17,8 +17,8 @@ void BuzzerGPIOInit(){
 
 	gpioinitstruct.GPIO_Pin = BUZZ_PIN_NEG;
 	gpioinitstruct.GPIO_Mode = GPIO_Mode_AF;
-	gpioinitstruct.GPIO_OType = GPIO_OType_OD;
-	gpioinitstruct.GPIO_PuPd = GPIO_PuPd_UP;
+	gpioinitstruct.GPIO_OType = GPIO_OType_PP;
+	gpioinitstruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	gpioinitstruct.GPIO_Speed = GPIO_SPEED_USED;
 	GPIO_Init(BUZZ_GPIO_NEG, &gpioinitstruct);
 	gpioinitstruct.GPIO_Pin = BUZZ_PIN_POS;
@@ -149,7 +149,7 @@ void PulseInit(uint16_t pfreq){
 	PulseTimerEnableInterrupts();
 	intbuzzcounter = 0;
 	intbuzzenable = DISABLE;
-	intbuzzthreshold = 20;
+	intbuzzthreshold = 25;
 }
 
 //Sets the frequency of the beep noise by resetting the timer "PULSE_TIM"
@@ -174,7 +174,7 @@ void PulseSetFreq(uint16_t pfreq){
 void TIM1_BRK_UP_TRG_COM_IRQHandler(){
 	if (TIM_GetITStatus(PULSE_TIM, TIM_IT_Update) != RESET){
 		TIM_ClearITPendingBit(PULSE_TIM, TIM_IT_Update);
-		if (intbuzzcounter > 20){
+		if (intbuzzcounter > intbuzzthreshold && intbuzzenable == ENABLE){
 			BuzzerEnable(ENABLE);
 			intbuzzcounter = 0;
 		}

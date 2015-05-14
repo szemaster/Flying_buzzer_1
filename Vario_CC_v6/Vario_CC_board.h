@@ -86,6 +86,7 @@ void VarioCC_DelayEnableInterrupts();
 void VarioCC_DelayTIMInit();
 void VarioCC_Delay(uint16_t delay);
 void VarioCC_NonBlockingDelay_Start(uint16_t delay);
-void TIM14_IRQHandler();
+
+
 
 #endif /* VARIO_CC_BOARD_H_ */

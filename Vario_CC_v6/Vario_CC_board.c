@@ -78,11 +78,4 @@ void VarioCC_NonBlockingDelay_Start(uint16_t delay){
 	TIM_Cmd(DELAY_TIM, ENABLE);
 }
 
-//Interrupt funcion for "VarioCC_Delay" and for "VarioCC_NonBlockingDelay_Start" functions
-void TIM14_IRQHandler(){
-	if (TIM_GetITStatus(DELAY_TIM, TIM_IT_Update) != RESET){
-		TIM_ClearITPendingBit(DELAY_TIM, TIM_IT_Update);
-		if (intcounter>0)
-			intcounter--;
-	}
-}
+
