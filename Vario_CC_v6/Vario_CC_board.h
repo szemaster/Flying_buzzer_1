@@ -18,7 +18,8 @@
 #define USART_AF_RX                       GPIO_AF_1
 #define USART_PINSOURCE_TX                GPIO_PinSource2
 #define USART_PINSOURCE_RX                GPIO_PinSource3
-#define USART_RCC_CMD(NEWSTATE)           RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, NEWSTATE)
+#define USART_USART_RCC_CMD(NEWSTATE)     RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, NEWSTATE)
+#define USART_GPIO_RCC_CMD(NEWSTATE)      RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, NEWSTATE)
 
 //power LED (PLED)
 #define PLED_GPIO                         GPIOA

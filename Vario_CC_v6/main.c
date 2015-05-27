@@ -18,6 +18,8 @@ int main()
 //	VarioCC_DelayTIMInit();
 	PressureSensor_Init();
 
+	
+
 	while (1)
 	{
 
