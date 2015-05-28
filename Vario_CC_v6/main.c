@@ -17,20 +17,15 @@ int main()
 	PowerLed_Init();
 //	VarioCC_DelayTIMInit();
 	PressureSensor_Init();
-
 	
 
 	while (1)
 	{
 
-	//		VarioCC_Delay(2000);
-	//BuzzerTimerandChannelReInit(TIM_BUZZOVERFLOW_FREQ_LOW);
+
 	PowerLed_Main();
-	/*temp = PressureSensor_GetRealTempr();
-	pressure = PressureSensor_GetRealPressure();*/
+
 	PressureSense_Main();
-	/*VarioCC_Delay(2000);
-	BuzzerTimerandChannelReInit(TIM_BUZZOVERFLOW_FREQ_HIGH);*/
 
 	}
 }

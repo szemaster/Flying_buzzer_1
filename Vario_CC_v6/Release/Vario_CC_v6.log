@@ -1,16 +1,14 @@
-﻿Build started 2015.04.30. 0:50:24.
+﻿Build started 2015.05.28. 16:01:14.
      1>Project "D:\Documents\Beagyazott_projektek\Vario_CC_v6\Vario_CC_v6\Vario_CC_v6.vcxproj" on node 2 (Build target(s)).
      1>Build:
          "D:\Program Files (x86)\Sysprogs\VisualGDB\\VisualGDB.exe" /build "D:\Documents\Beagyazott_projektek\Vario_CC_v6\Vario_CC_v6\Vario_CC_v6.vcxproj" "/solution:D:\Documents\Beagyazott_projektek\Vario_CC_v6\Vario_CC_v6.sln" "/config:Release" "/platform:Win32"
          VisualGDB: Run "cmd.exe /c "D:\SysGCC\arm-eabi\bin\make.exe" CONFIG=Release" in directory "D:\Documents\Beagyazott_projektek\Vario_CC_v6\Vario_CC_v6" on local computer
-         D:\SysGCC\arm-eabi/bin/arm-eabi-gcc.exe -ggdb -ffunction-sections -O1 -mcpu=cortex-m0 -mthumb   -IC:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/CMSIS/Device/ST/STM32F0xx/Include -IC:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/CMSIS/Include -IC:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/STM32F0xx_StdPeriph_Driver/inc -DNDEBUG -DRELEASE -Dstm32_flash_layout -DSTM32F030F4 -DSTM32F030  -c PressureSensor.c -o Release/PressureSensor.o -MD -MF Release/PressureSensor.dep
-         D:\SysGCC\arm-eabi/bin/arm-eabi-g++.exe -o Release/Vario_CC_v6.elf -Wl,-gc-sections -mcpu=cortex-m0 -mthumb -TC:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/LinkerScripts/STM32F030x4_flash.lds       -Wl,--start-group Release/BMP180_api.o Release/Buzzer.o Release/system_stm32f0xx.o Release/startup_stm32f0xx.o Release/stm32f0xx_adc.o Release/stm32f0xx_can.o Release/stm32f0xx_cec.o Release/stm32f0xx_comp.o Release/stm32f0xx_crc.o Release/stm32f0xx_crs.o Release/stm32f0xx_dac.o Release/stm32f0xx_dbgmcu.o Release/stm32f0xx_dma.o Release/stm32f0xx_exti.o Release/stm32f0xx_flash.o Release/stm32f0xx_gpio.o Release/stm32f0xx_i2c.o Release/stm32f0xx_iwdg.o Release/stm32f0xx_misc.o Release/stm32f0xx_pwr.o Release/stm32f0xx_rcc.o Release/stm32f0xx_rtc.o Release/stm32f0xx_spi.o Release/stm32f0xx_syscfg.o Release/stm32f0xx_tim.o Release/stm32f0xx_usart.o Release/stm32f0xx_wwdg.o Release/I2C_extension.o Release/LEDBlink.o Release/main.o Release/PowerLed.o Release/PressureSensor.o Release/Vario_CC_board.o -lcompactcpp    -Wl,--end-group
-         D:\SysGCC\arm-eabi/bin/arm-eabi-objcopy.exe -O binary Release/Vario_CC_v6.elf Release/Vario_CC_v6.bin
+         make: Nothing to be done for `all'.
          ------------------- Memory utilization report -------------------
-         Used FLASH: 5760 bytes out of 16KB (35%)
-         Used RAM: 3908 bytes out of 4096 bytes (95%)
+         Used FLASH: 14KB out of 16KB (90%)
+         Used RAM: 992 bytes out of 4096 bytes (24%)
      1>Done Building Project "D:\Documents\Beagyazott_projektek\Vario_CC_v6\Vario_CC_v6\Vario_CC_v6.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:07.16
+Time Elapsed 00:00:05.09

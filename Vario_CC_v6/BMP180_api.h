@@ -79,11 +79,8 @@ typedef struct BMP180_CTRL_TypeDef{
 	unsigned char XLSB;
 }BMP180_CTRL_TypeDef;
 
-//#define BMP180_CALREGS                 ((BMP180_CAL_TypeDef*) BMP180_CALREGS_BASE_ADDRESS)
-//#define BMP180_CTRLREGS                ((BMP180_CTRL_TypeDef*) BMP180_CTRLREGS_BASE_ADDRESS)
-
-volatile BMP180_CAL_TypeDef                     BMP180_CALREGS;
-volatile BMP180_CTRL_TypeDef                    BMP180_CTRLREGS;
+volatile BMP180_CAL_TypeDef            BMP180_CALREGS;
+volatile BMP180_CTRL_TypeDef           BMP180_CTRLREGS;
 
 void BMP180_READ_CALDATA();
 void BMP180_READ_UT();
