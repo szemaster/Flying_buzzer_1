@@ -4,6 +4,7 @@
 #include "stm32f0xx_rcc.h"
 #include "stm32f0xx_tim.h"
 #include "stm32f0xx_misc.h"                                  //it contains the nvic corresponding functions
+#include "stm32f0xx_pwr.h"
 
 //common
 #define GPIO_SPEED_USED                   GPIO_Speed_2MHz
@@ -81,6 +82,7 @@
 #define DELAY_IRQN                        TIM14_IRQn
 
 volatile uint32_t intcounter;
+volatile uint8_t doesitsleep;             //doesitsleep = 1 if it was sleeping when the interrupt woke it up.
 
 uint32_t VarioCC_GetTimBusClockFreq();
 void VarioCC_DelayEnableInterrupts();

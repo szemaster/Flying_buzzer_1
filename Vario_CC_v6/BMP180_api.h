@@ -87,6 +87,6 @@ void BMP180_READ_UT();
 void BMP180_READ_UP_START(unsigned char oss);
 void BMP180_READ_UP_END();
 short BMP180_CALC_TEMP();
-long BMP180_CALC_PRESS(unsigned char oss);
+int32_t BMP180_CALC_PRESS(unsigned char oss);
 
 #endif

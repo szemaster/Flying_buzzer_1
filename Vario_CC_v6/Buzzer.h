@@ -11,9 +11,12 @@
 #define TIM_BUZZOVERFLOW_FREQ_HIGH               2500
 #define TIM_BUZZOVERFLOW_FREQ_LOW                700
 
-#define TIM_PULSETICK_FREQ                       1000
-#define TIM_PULSECHANNELCOMPARE                  70         //the channel will be on (or actually off) \ 
-                                                             //(TIM_PULSECHANNELCOMPARE/TIM_PULSETICK_FREQ) sec long
+#define TIM_PULSETICK_FREQ                       200         //Sets the prescaler value, prescaler=(timclock - TIM_PULSETICK_FREQ) / TIM_PULSETICK_FREQ.
+                                                             //The actual frequency is TIM_PULSETICK_FREQ/TIM_PULSEPERIOD
+                                                             //Note: prescaler uses 16 bits
+#define TIM_PULSEPERIOD                          2           //The counter will start over if it reaches this value
+#define TIM_PULSECHANNELCOMPARE                  7           //the channel will be on (or actually off) \ 
+                                                             //(TIM_PULSECHANNELCOMPARE*(TIM_PULSETICK_FREQ/TIM_PULSEPERIOD) sec long
 volatile uint32_t intbuzzcounter;
 volatile uint8_t intbuzzenable;
 volatile uint16_t intbuzzthreshold;

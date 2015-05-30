@@ -12,7 +12,7 @@ void PressureSensor_Init(){
 	VarioCC_Delay(PRESS_SENS_STARTUPTIME);
 	PRESS_SENS_READ_CALIBR_DATA();
 
-    BMP180_READ_UP_START(PRESS_SENS_RESOLUTION);
+	BMP180_READ_UP_START(PRESS_SENS_RESOLUTION);
 }
 
 //reads the the uncompensated temerature value and calcuates the real temperature value
@@ -52,35 +52,35 @@ void PressureSense_Main(){
 	static uint16_t startuptime = 0;
 	float velocity;
 	/*if (i == 0){
-		GPIO_SetBits(PLED_GPIO, PLED_PIN);
+	GPIO_SetBits(PLED_GPIO, PLED_PIN);
 	}*/
 
-		if (intcounter == 0){
-			//i++;
-			pressure = PressureSensor_GetRealPressure();
+	if (intcounter == 0){
+		//i++;
+		pressure = PressureSensor_GetRealPressure();
 #ifdef PRESS_SENS_DEBUGMODE
-	datap[cnt++] = (int16_t)(pressure-100000);
+		datap[cnt++] = (int16_t)(pressure - 100000);
 #endif
-			PressureSense_InsertData(pressure);
-			PressureSensor_GetUTIfNeeded();
-			PRESS_SENS_START_UPMEAS(PRESS_SENS_RESOLUTION);	
-			if (startuptime > PRESS_SENS_DEVICESTARTUPTIME){
-				if (i++ == 8){
-					PressureSense_DetermineVelocity();
-					i = 0;
-				}
+		PressureSense_InsertData(pressure);
+		PressureSensor_GetUTIfNeeded();
+		PRESS_SENS_START_UPMEAS(PRESS_SENS_RESOLUTION);
+		if (startuptime > PRESS_SENS_DEVICESTARTUPTIME){
+			if (i++ == 8){
+				PressureSense_DetermineVelocity();
+				i = 0;
 			}
-			else{
-				startuptime++;
-			}
+		}
+		else{
+			startuptime++;
+		}
 	}
 	/*if (i == 1999){
-		GPIO_ResetBits(PLED_GPIO, PLED_PIN);
+	GPIO_ResetBits(PLED_GPIO, PLED_PIN);
 	}*/
 #ifdef PRESS_SENS_DEBUGMODE
-		if (cnt == 1620){
-			cnt = 0;
-		}
+	if (cnt == 1620){
+		cnt = 0;
+	}
 #endif
 }
 
@@ -90,10 +90,10 @@ void PressureSense_DetermineVelocity(){
 	int32_t velofast, veloslow, veloveryslow;
 	char positive = 1;
 	PRESS_SENS_VELOCALCSARRAY_INIT;
-static int i = 0;
+	static int i = 0;
 
-velofast = PressureSense_CalculateVelocity(&velocalc[0]);/*PressureSense_CalculateVelocity_Fast()*/;
-//VELOCITYFAST[i] = velofast;
+	velofast = PressureSense_CalculateVelocity(&velocalc[0]);/*PressureSense_CalculateVelocity_Fast()*/;
+	//VELOCITYFAST[i] = velofast;
 	velofast = PressureSense_IsPositive(velofast, &positive);
 	if (velofast > PRESS_SENS_LIMIT_FAST){
 		slowingdown = 0;
@@ -101,7 +101,7 @@ velofast = PressureSense_CalculateVelocity(&velocalc[0]);/*PressureSense_Calcula
 	}
 	else{
 		veloslow = PressureSense_CalculateVelocity(&velocalc[1])/*PressureSense_CalculateVelocity_Slow()*/;
-//		VELOCITYSLOW[i] = veloslow;
+		//		VELOCITYSLOW[i] = veloslow;
 
 		veloslow = PressureSense_IsPositive(veloslow, &positive);
 		if (veloslow > PRESS_SENS_LIMIT_SLOW && veloslow < PRESS_SENS_LIMIT_FAST){
@@ -121,7 +121,7 @@ velofast = PressureSense_CalculateVelocity(&velocalc[0]);/*PressureSense_Calcula
 		}
 		else{
 			veloveryslow = /*PressureSense_CalculateVelocity_VerySlow()*/PressureSense_CalculateVelocity(&velocalc[2]);
-//			VELOCITYVERYSLOW[i] = veloveryslow;
+			//			VELOCITYVERYSLOW[i] = veloveryslow;
 			veloveryslow = PressureSense_IsPositive(veloveryslow, &positive);
 			if (veloveryslow > PRESS_SENS_LIMIT_VERYSLOW && veloveryslow < PRESS_SENS_LIMIT_SLOW){
 				if (veloslow > veloveryslow){
@@ -139,7 +139,7 @@ velofast = PressureSense_CalculateVelocity(&velocalc[0]);/*PressureSense_Calcula
 				PressureSense_BuzzerControl(veloslow, positive);
 			}
 			else //if (veloveryslow < PRESS_SENS_LIMIT_VERYSLOW)
-				{
+			{
 				//Interesting bug: If you uncomment the condition above the VarioCC_Delay funcion does not work in PressureSensor_Init() function
 				//It is quite unbelievable, but still. I have no idea what is the problem
 				slowingdown = 0;
@@ -147,11 +147,11 @@ velofast = PressureSense_CalculateVelocity(&velocalc[0]);/*PressureSense_Calcula
 			}
 		}
 	}
-/*	i++;
+	/*	i++;
 	if (i == 150){
-		for (;;){
-			asm("nop");
-		}
+	for (;;){
+	asm("nop");
+	}
 	}*/
 }
 
@@ -211,7 +211,7 @@ uint64_t PressureSense_CalculateSumXiTYi(uint16_t length){
 	uint16_t i = 0;
 	uint64_t result = 0;
 	for (i = length; i > 0; i--){
-		result += pressens_pressarray[i-1] * (length - (i-1));
+		result += pressens_pressarray[i - 1] * (length - (i - 1));
 	}
 	return result;
 }
@@ -312,5 +312,11 @@ void TIM14_IRQHandler(){
 		TIM_ClearITPendingBit(DELAY_TIM, TIM_IT_Update);
 		if (intcounter>0)
 			intcounter--;
+		/*if (doesitsleep == 1 && intcounter>0){
+			PWR_EnterSleepMode(PWR_SLEEPEntry_WFI);
+		}
+		else{
+			doesitsleep = 0;
+		}*/
 	}
 }

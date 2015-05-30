@@ -97,14 +97,26 @@ void BuzzerTimerandChannelReInit(uint16_t freq){
 //        according to the values defined in Buzzer.h and to the value of PCLK
 //  - initializes a timer Channel for PULSE_TIM_OC
 //  - enables TIM_IT_Update interrupt for the timer
+//void PulseTimerInit(uint32_t timclock, uint16_t pfreq){
+//	TIM_TimeBaseInitTypeDef timerinitstruct;
+//
+//	PULSE_RCC_TIM_CMD(ENABLE);
+//
+//	TIM_TimeBaseStructInit(&timerinitstruct);
+//	timerinitstruct.TIM_Prescaler = (timclock / TIM_PULSETICK_FREQ) - 1;//(timclock - TIM_PULSETICK_FREQ)/TIM_PULSETICK_FREQ
+//	timerinitstruct.TIM_Period = (pfreq*TIM_PULSETICK_FREQ) / 10 - 1;
+//	TIM_TimeBaseInit(PULSE_TIM, &timerinitstruct);
+//	TIM_Cmd(PULSE_TIM, ENABLE);
+//	TIM_ITConfig(PULSE_TIM, TIM_IT_Update, ENABLE);
+//}
 void PulseTimerInit(uint32_t timclock, uint16_t pfreq){
 	TIM_TimeBaseInitTypeDef timerinitstruct;
 
 	PULSE_RCC_TIM_CMD(ENABLE);
 
 	TIM_TimeBaseStructInit(&timerinitstruct);
-	timerinitstruct.TIM_Prescaler = (timclock / TIM_PULSETICK_FREQ) - 1;
-	timerinitstruct.TIM_Period = (pfreq*TIM_PULSETICK_FREQ)/10 - 1;
+	timerinitstruct.TIM_Prescaler = (timclock - TIM_PULSETICK_FREQ) / TIM_PULSETICK_FREQ;
+	timerinitstruct.TIM_Period = TIM_PULSEPERIOD - 1;
 	TIM_TimeBaseInit(PULSE_TIM, &timerinitstruct);
 	TIM_Cmd(PULSE_TIM, ENABLE);
 	TIM_ITConfig(PULSE_TIM, TIM_IT_Update, ENABLE);
@@ -145,7 +157,7 @@ void PulseInit(uint16_t pfreq){
 	uint32_t timclock;
 	timclock = VarioCC_GetTimBusClockFreq();
 	PulseTimerInit(timclock, pfreq);
-	PulseChannelInit();
+//	PulseChannelInit();
 	PulseTimerEnableInterrupts();
 	intbuzzcounter = 0;
 	intbuzzenable = DISABLE;
@@ -157,17 +169,17 @@ void PulseInit(uint16_t pfreq){
 //            frequency=1/(TIM_PULSETICK_FREQ*pfreq/10)
 //            so if TIM_PULSETICK_FREQ = 1000 and pfreq = 1, then frequency = 10Hz
 //            se beep is gonna happen every 100ms
-void PulseSetFreq(uint16_t pfreq){
-	uint32_t timclock;
-	uint32_t counter;
-	timclock = VarioCC_GetTimBusClockFreq();
-	TIM_Cmd(PULSE_TIM, DISABLE);
-	counter = TIM_GetCounter(PULSE_TIM);
-	if (counter > (pfreq*TIM_PULSETICK_FREQ) / 10 - 1){
-		TIM_SetCounter(PULSE_TIM, 0);
-	}	
-	PulseTimerInit(timclock, pfreq);
-}
+//void PulseSetFreq(uint16_t pfreq){
+//	uint32_t timclock;
+//	uint32_t counter;
+//	timclock = VarioCC_GetTimBusClockFreq();
+//	TIM_Cmd(PULSE_TIM, DISABLE);
+//	counter = TIM_GetCounter(PULSE_TIM);
+//	if (counter > (pfreq*TIM_PULSETICK_FREQ) / 10 - 1){
+//		TIM_SetCounter(PULSE_TIM, 0);
+//	}
+//	PulseTimerInit(timclock, pfreq);
+//}
 
 //interrupt handler for "PULSE_TIM"
 //it is called of the counter of the timer has reached the period value (set during initialization)
@@ -180,16 +192,24 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(){
 		}
 		else{
 			intbuzzcounter++;
+			if (intbuzzcounter == TIM_PULSECHANNELCOMPARE){
+				BuzzerEnable(DISABLE);
+			}
 		}
+		/*if (doesitsleep == 1){
+			PWR_EnterSleepMode(PWR_SLEEPEntry_WFI);
+		}*/
 	}
 }
 
 //interrupt handler for "PULSE_TIM"
 //it is called of the counter of the timer has reached the pulse value (set during initialization of the channel)
-void TIM1_CC_IRQHandler(){
-	if (TIM_GetITStatus(PULSE_TIM, PULSE_TIM_CC_USED) != RESET){
-		TIM_ClearITPendingBit(PULSE_TIM, PULSE_TIM_CC_USED);
-		BuzzerEnable(DISABLE);
-
-	}
-}
+//void TIM1_CC_IRQHandler(){
+//	if (TIM_GetITStatus(PULSE_TIM, PULSE_TIM_CC_USED) != RESET){
+//		TIM_ClearITPendingBit(PULSE_TIM, PULSE_TIM_CC_USED);
+//		BuzzerEnable(DISABLE);
+//		/*if (doesitsleep == 1){
+//			PWR_EnterSleepMode(PWR_SLEEPEntry_WFI);
+//		}*/
+//	}
+//}

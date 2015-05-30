@@ -100,7 +100,7 @@ void BMP180_READ_UP_END(){
 //                                        BMP180_OSS_HIGHRES
 //                                        BMP180_OSS_ULTRAHIGHRES
 //output: long, the calculated pressure in Pa
-long BMP180_CALC_PRESS(unsigned char oss){
+int32_t BMP180_CALC_PRESS(unsigned char oss){
 	long pressure, x1, x2, x3, b3, b6;
 	unsigned long b4, b7, up;
 	
