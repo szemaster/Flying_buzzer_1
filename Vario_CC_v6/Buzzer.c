@@ -189,6 +189,7 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(){
 	if (TIM_GetITStatus(PULSE_TIM, TIM_IT_Update) != RESET){
 		TIM_ClearITPendingBit(PULSE_TIM, TIM_IT_Update);
 		if (intbuzzcounter > intbuzzthreshold && intbuzzenable == ENABLE){
+			BUZZ_RCC_TIM_CMD(ENABLE);
 			BuzzerEnable(ENABLE);
 			intbuzzcounter = 0;
 		}
@@ -196,6 +197,7 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(){
 			intbuzzcounter++;
 			if (intbuzzcounter == TIM_PULSECHANNELCOMPARE){
 				BuzzerEnable(DISABLE);
+				BUZZ_RCC_TIM_CMD(DISABLE);
 			}
 		}
 
