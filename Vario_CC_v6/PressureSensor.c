@@ -16,16 +16,16 @@ void PressureSensor_Init(){
 }
 
 //reads the the uncompensated temerature value and calcuates the real temperature value
-short PressureSensor_GetRealTempr(){
+/*short PressureSensor_GetRealTempr(){
 	PRESS_SENS_GET_UTEMPR();
 	return PRESS_SENS_CALC_REALTEMP();
-}
+}*/
 
 //reads the the uncompensated pressure value and calcuates the real pressure value
-long PressureSensor_GetRealPressure(){
+/*long PressureSensor_GetRealPressure(){
 	PRESS_SENS_GET_UPRESS();
 	return PRESS_SENS_CALC_REALPRESSURE(PRESS_SENS_RESOLUTION);
-}
+}*/
 
 //sends the reset command to the sensor
 void PressureSensor_Reset(){
@@ -33,42 +33,55 @@ void PressureSensor_Reset(){
 }
 
 //This function checks if it's time to remeasure the temperature and if it is, than it remeasures the temperature.
-void PressureSensor_GetUTIfNeeded(){
+/*void PressureSensor_GetUTIfNeeded(){
 	static uint8_t i = PRESS_SENS_FREQOFTEMPRMEASUREMENT;
-	if (i == PRESS_SENS_FREQOFTEMPRMEASUREMENT){
+	if (i >= PRESS_SENS_FREQOFTEMPRMEASUREMENT){
 		PRESS_SENS_GET_UTEMPR();
 		PRESS_SENS_CALC_REALTEMP();
 		i = 0;
 	}
 	i++;
-}
+}*/
 
 void PressureSense_Main(){
-	uint32_t pressure;
+//	uint32_t pressure;
 #ifdef PRESS_SENS_DEBUGMODE
 	static uint16_t cnt = 0;
 #endif
 	static uint16_t i = 0;
 	static uint16_t startuptime = 0;
 	float velocity;
+	unsigned long ut, temp;
+	static unsigned long utold = 0;
+	long pressure;
+	unsigned long up;
 	/*if (i == 0){
 	GPIO_SetBits(PLED_GPIO, PLED_PIN);
 	}*/
 
 	if (intcounter == 0){
 		//i++;
-		pressure = PressureSensor_GetRealPressure();
+//		pressure = PressureSensor_GetRealPressure();
+		up = PRESS_SENS_GET_UPRESS(PRESS_SENS_RESOLUTION);
+
 #ifdef PRESS_SENS_DEBUGMODE
 		datap[cnt++] = (int16_t)(pressure - 100000);
 #endif
+//		PressureSense_InsertData(pressure);
+		//PressureSensor_GetUTIfNeeded();
+		temp = ut = PRESS_SENS_GET_UTEMPR();
+		ut = (ut + utold) / 2;
+		utold = temp;
+		PRESS_SENS_CALC_REALTEMP(ut);
+		pressure = PRESS_SENS_CALC_REALPRESSURE(PRESS_SENS_RESOLUTION, up);
 		PressureSense_InsertData(pressure);
-		PressureSensor_GetUTIfNeeded();
+
 		PRESS_SENS_START_UPMEAS(PRESS_SENS_RESOLUTION);
 		if (startuptime > PRESS_SENS_DEVICESTARTUPTIME){
-			if (i++ == 8){
+		//	if (i++ == 8){
 				PressureSense_DetermineVelocity();
-				i = 0;
-			}
+		//		i = 0;
+		//	}
 		}
 		else{
 			startuptime++;

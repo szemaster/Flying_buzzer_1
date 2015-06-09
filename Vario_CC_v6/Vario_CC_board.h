@@ -84,6 +84,8 @@
 volatile uint32_t intcounter;
 volatile uint8_t doesitsleep;             //doesitsleep = 1 if it was sleeping when the interrupt woke it up.
 
+
+
 uint32_t VarioCC_GetTimBusClockFreq();
 void VarioCC_DelayEnableInterrupts();
 void VarioCC_DelayTIMInit();

@@ -10,9 +10,9 @@
 //Functions and constants came from the API of the pressure sensor
 #define PRESS_SENS_READ_CALIBR_DATA()            BMP180_READ_CALDATA()
 #define	PRESS_SENS_GET_UTEMPR()                  BMP180_READ_UT()
-#define PRESS_SENS_CALC_REALTEMP()               BMP180_CALC_TEMP()
-#define PRESS_SENS_GET_UPRESS()                  BMP180_READ_UP_END()
-#define PRESS_SENS_CALC_REALPRESSURE(OSS)        BMP180_CALC_PRESS(OSS)
+#define PRESS_SENS_CALC_REALTEMP(UT)             BMP180_CALC_TEMP(UT)
+#define PRESS_SENS_GET_UPRESS(OSS)               BMP180_READ_UP_END(OSS)
+#define PRESS_SENS_CALC_REALPRESSURE(OSS, UP)        BMP180_CALC_PRESS(OSS, UP)
 #define PRESS_SENS_START_UPMEAS(OSS)             BMP180_READ_UP_START(OSS)
 
 #define PRESS_SENS_RESOLUTION                    BMP180_OSS_ULTRAHIGHRES
@@ -23,7 +23,7 @@
 //End of functions and constants came from the API of the pressure sensor
 
 //Constants and definitions for line regression stages
-#define PRESS_SENS_FREQOFTEMPRMEASUREMENT        4
+#define PRESS_SENS_FREQOFTEMPRMEASUREMENT        0
 //constants that specifies the way of altitude regression
 #define PRESS_SENS_STAGENUM                      3
 //stage fast
@@ -143,7 +143,7 @@ uint32_t pressens_pressarray[PRESS_SENS_ARRAYLENGTH];
 												   PRESS_SENS_BUZZ_STAGETHRESHOLD_7, \
 												   PRESS_SENS_BUZZ_STAGETHRESHOLD_8, \
 												   PRESS_SENS_BUZZ_STAGETHRESHOLD_9, \
-												   PRESS_SENS_BUZZ_STAGETHRESHOLD_10, \ 
+												   PRESS_SENS_BUZZ_STAGETHRESHOLD_10, \
                                                    PRESS_SENS_BUZZ_STAGETHRESHOLD_11, \
 												   PRESS_SENS_BUZZ_STAGETHRESHOLD_12, \
 												   PRESS_SENS_BUZZ_STAGETHRESHOLD_13, \

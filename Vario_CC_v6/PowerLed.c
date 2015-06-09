@@ -66,6 +66,8 @@ void PowerLed_ADCADCInit(){
 	ADC_ChannelConfig(PADC_ADC, PADC_ADC_CHANNEL, PADC_ADC_SAMPLETIME);
 	ADC_GetCalibrationFactor(PADC_ADC);
 	ADC_Cmd(PADC_ADC, ENABLE);
+
+	PADC_RCC_ADC_CMD(DISABLE);
 }
 
 //starts a conversion and returns with the result of the conversion
@@ -91,20 +93,46 @@ uint8_t PowerLed_IsVoltageOK(uint16_t voltage){
 //initializes the ADC that will convert the value of Vrefint
 //initializes the GPIO pin of the led
 //initializes the timer that will schedule the conversions
-void PowerLed_Init(){
+/*void PowerLed_Init(){
 	PowerLed_ADCADCInit();
 	PowerLed_GPIOInit();
 	PowerLed_ADCTimerInitandStart();
+}*/
+
+void PowerLed_Init(){
+	PowerLed_ADCADCInit();
+	PowerLed_GPIOInit();
+	adcconvcounter = 0;
 }
 
 //checks if it is time to convert the value of Vrefint
 //regularly recalibrates the ADC (frequency is defined in PowerLed.h)
 //converts the value of Vrefint
 //according to the result of conversion it sets/resets the led
+//void PowerLed_Main(){
+//	static uint8_t i=0;
+//	if (TIM_GetITStatus(PADC_TIM, TIM_IT_Update) != RESET){
+//		TIM_ClearITPendingBit(PADC_TIM, TIM_IT_Update);
+//
+//		if (!(i++ & PADC_RECALIBFREQ)){
+//			ADC_GetCalibrationFactor(PADC_ADC);
+//		}
+//
+//		if (!PowerLed_IsVoltageOK(PowerLed_ADCGetRefVoltValue())){
+//			GPIO_SetBits(PLED_GPIO, PLED_PIN);
+//		}
+//		else{
+//			GPIO_ResetBits(PLED_GPIO, PLED_PIN);
+//		}
+//	}
+//}
 void PowerLed_Main(){
-	static uint8_t i=0;
-	if (TIM_GetITStatus(PADC_TIM, TIM_IT_Update) != RESET){
-		TIM_ClearITPendingBit(PADC_TIM, TIM_IT_Update);
+	static uint8_t i = 0;
+	if (adcconvcounter <= 0){
+	/*if (TIM_GetITStatus(PADC_TIM, TIM_IT_Update) != RESET){
+		TIM_ClearITPendingBit(PADC_TIM, TIM_IT_Update);*/
+
+		PADC_RCC_ADC_CMD(ENABLE);
 
 		if (!(i++ & PADC_RECALIBFREQ)){
 			ADC_GetCalibrationFactor(PADC_ADC);
@@ -116,7 +144,10 @@ void PowerLed_Main(){
 		else{
 			GPIO_ResetBits(PLED_GPIO, PLED_PIN);
 		}
+
+		PADC_RCC_ADC_CMD(DISABLE);
 	}
 }
+
 
 

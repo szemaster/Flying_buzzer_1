@@ -6,6 +6,8 @@
 */
 
 #include "Buzzer.h"
+#include "PowerLed.h"            //Note: This application hasn't got additional timer for scheduling ADC converion, 
+                                 //      it uses the timer of the buzzer. This way we can spare with consumption.
 
 //Initializes GPIOs for the buzzer
 //  - enables periphclock for GPIOs that are used
@@ -196,6 +198,9 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(){
 				BuzzerEnable(DISABLE);
 			}
 		}
+
+		adcconvcounter--;            //Note: This application hasn't got additional timer for scheduling ADC converion, 
+                                     //      it uses the timer of the buzzer. This way we can spare with consumption.
 		/*if (doesitsleep == 1){
 			PWR_EnterSleepMode(PWR_SLEEPEntry_WFI);
 		}*/

@@ -83,10 +83,10 @@ volatile BMP180_CAL_TypeDef            BMP180_CALREGS;
 volatile BMP180_CTRL_TypeDef           BMP180_CTRLREGS;
 
 void BMP180_READ_CALDATA();
-void BMP180_READ_UT();
+unsigned long BMP180_READ_UT();
 void BMP180_READ_UP_START(unsigned char oss);
-void BMP180_READ_UP_END();
-short BMP180_CALC_TEMP();
-int32_t BMP180_CALC_PRESS(unsigned char oss);
+unsigned long BMP180_READ_UP_END(unsigned char oss);
+short BMP180_CALC_TEMP(unsigned long ut);
+int32_t BMP180_CALC_PRESS(unsigned char oss, unsigned long up);
 
 #endif

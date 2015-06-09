@@ -28,7 +28,7 @@ void BMP180_READ_CALDATA(){
 
 //Reads out the uncompensated temperature value
 //the uncompensated temperature value will be stored in BMP180_CTRLREGS.MSB and BMP180_CTRLREGS.LSB (defined in BMP180_api.h)
-void BMP180_READ_UT(){
+unsigned long BMP180_READ_UT(){
 	unsigned char data[2];
 
 	BMP_WRITE(I2C_USED, BMP180_DEV_ADDR, BMP180_ADDR_CTRL_MEAS, BMP180_COM_CTRL_MEAS_TEMP);
@@ -38,21 +38,27 @@ void BMP180_READ_UT(){
 	BMP_READ(I2C_USED, BMP180_DEV_ADDR, BMP180_ADDR_OUT_MSB, data, 2);
 	BMP180_CTRLREGS.MSB = data[0];
 	BMP180_CTRLREGS.LSB = data[1];
+	return (BMP180_CTRLREGS.MSB << 8) | BMP180_CTRLREGS.LSB;
 }
 
 //calculates valid temperature from uncompnsated temperature
 //output: short, the calculated temperature in 0.1C°
-short BMP180_CALC_TEMP(){
+short BMP180_CALC_TEMP(unsigned long ut){
 	short temperature;
-	unsigned long ut;
+//	unsigned long ut;
 	long x1, x2;
+//	static long calregb5old = 4500;
 
-	ut = (BMP180_CTRLREGS.MSB << 8) | BMP180_CTRLREGS.LSB;
+	//ut = (BMP180_CTRLREGS.MSB << 8) | BMP180_CTRLREGS.LSB;
 
 	x1 = (((long)ut - (long)BMP180_CALREGS.AC6) * (long)BMP180_CALREGS.AC5) >> 15;
 	x2 = ((long)BMP180_CALREGS.MC << 11) / (x1 + BMP180_CALREGS.MD);
 	BMP180_CALREGS.B5 = x1 + x2;
 	temperature = (BMP180_CALREGS.B5 + 8) >> 4;
+
+//	BMP180_CALREGS.B5 = (BMP180_CALREGS.B5 + calregb5old) / 2;
+//	calregb5old = x1 + x2;
+
 	return temperature;
 }
 
@@ -83,13 +89,14 @@ void BMP180_READ_UP_START(unsigned char oss){
 
 //The funcion gets the result of the last pressureconversion.
 //The uncompensated pressure value will be stored in BMP180_CTRLREGS.MSB, BMP180_CTRLREGS.LSB and BMP180_CTRLREGS.XLSB (defined in BMP180_api.h)
-void BMP180_READ_UP_END(){
+unsigned long BMP180_READ_UP_END(unsigned char oss){
 	volatile unsigned char data[3];
 	static int y = 0;
 		BMP_READ(I2C_USED, BMP180_DEV_ADDR, BMP180_ADDR_OUT_MSB, data, 3);
 		BMP180_CTRLREGS.MSB = data[0];
 		BMP180_CTRLREGS.LSB = data[1];
 		BMP180_CTRLREGS.XLSB = data[2];
+		return ((BMP180_CTRLREGS.MSB << 16) | (BMP180_CTRLREGS.LSB << 8) | BMP180_CTRLREGS.XLSB) >> (8 - oss);
 }
 
 
@@ -100,11 +107,11 @@ void BMP180_READ_UP_END(){
 //                                        BMP180_OSS_HIGHRES
 //                                        BMP180_OSS_ULTRAHIGHRES
 //output: long, the calculated pressure in Pa
-int32_t BMP180_CALC_PRESS(unsigned char oss){
+int32_t BMP180_CALC_PRESS(unsigned char oss, unsigned long up){
 	long pressure, x1, x2, x3, b3, b6;
-	unsigned long b4, b7, up;
+	unsigned long b4, b7/*, up*/;
 	
-	up = ((BMP180_CTRLREGS.MSB << 16) | (BMP180_CTRLREGS.LSB << 8) | BMP180_CTRLREGS.XLSB) >> (8 - oss);
+//	up = ((BMP180_CTRLREGS.MSB << 16) | (BMP180_CTRLREGS.LSB << 8) | BMP180_CTRLREGS.XLSB) >> (8 - oss);
 	b6 = BMP180_CALREGS.B5 - 4000;
 
 	/*****calculate B3************/
