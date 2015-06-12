@@ -10,7 +10,7 @@
 #define BMP180_WAIT_UP_LOWPOWER        5   //...WAIT_UP values must be under 256,
 #define BMP180_WAIT_UP_STANDARD        8   //   because the function "BMP180_READ_UP(...)"
 #define BMP180_WAIT_UP_HIHGRES         14  //   uses them as unsigned char
-#define BMP180_WAIT_UP_ULTRAHIGHRES    26
+#define BMP180_WAIT_UP_ULTRAHIGHRES    27
 
 //read-write-wait functions
 //the header files of the defined functions must be included

@@ -14,4 +14,6 @@ Debug/Buzzer.o: Buzzer.c Buzzer.h Vario_CC_board.h \
  C:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/STM32F0xx_StdPeriph_Driver/inc/stm32f0xx_pwr.h \
  C:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/STM32F0xx_StdPeriph_Driver/inc/stm32f0xx_gpio.h \
  PowerLed.h \
- C:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/STM32F0xx_StdPeriph_Driver/inc/stm32f0xx_adc.h
+ C:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/STM32F0xx_StdPeriph_Driver/inc/stm32f0xx_adc.h \
+ PressureSensor.h BMP180_api.h I2C_extension.h \
+ C:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/STM32F0xx_StdPeriph_Driver/inc/stm32f0xx_i2c.h

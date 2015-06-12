@@ -36,8 +36,8 @@ void VarioCC_DelayTIMInit(){
 	timclock = VarioCC_GetTimBusClockFreq();
 
 	TIM_TimeBaseStructInit(&timerinitstruct);
-	timerinitstruct.TIM_Prescaler = (timclock / DELAY_TIM_TICK_FREQ) - 1;
-	timerinitstruct.TIM_Period = DELAY_TIM_TICK_FREQ / DELAY_FREQ - 1;
+	timerinitstruct.TIM_Prescaler = 40000;//(timclock / DELAY_TIM_TICK_FREQ) - 1;
+	timerinitstruct.TIM_Period = 1;//DELAY_TIM_TICK_FREQ / DELAY_FREQ - 1;
 	TIM_TimeBaseInit(DELAY_TIM, &timerinitstruct);
 	TIM_ITConfig(DELAY_TIM, TIM_IT_Update, ENABLE);
 
@@ -56,26 +56,36 @@ void VarioCC_DelayEnableInterrupts(){
 //This is a blocking wait funcion. The program can't get over until the delaytime expires.
 //input: delay: time to be delayed. Its unit is equal to (1/"DELAY_FREQ") is sec.
 //Note: to be able to use this function, first of all you should call "VarioCC_DelayTIMInit()" function
+//void VarioCC_Delay(uint16_t delay){
+//	TIM_SetCounter(DELAY_TIM, 0);
+//	intcounter = delay;
+//	TIM_Cmd(DELAY_TIM, ENABLE);
+//	while (intcounter > 0){
+//		asm("nop");
+//	}
+//	TIM_Cmd(DELAY_TIM, DISABLE);
+//}
 void VarioCC_Delay(uint16_t delay){
-	TIM_SetCounter(DELAY_TIM, 0);
 	intcounter = delay;
-	TIM_Cmd(DELAY_TIM, ENABLE);
 	while (intcounter > 0){
 		asm("nop");
 	}
-	TIM_Cmd(DELAY_TIM, DISABLE);
 }
+
 
 //This is a non-blocking timer function. You can do anything else, until the specified time expires.
 //input: delay: time to be delayed. Its unit is equal to (1/"DELAY_FREQ") in sec.
 //     "intcounter" is going to be 0, if the specified time has elapsed. 
 //      intcounter is a volatile variable defined in "Vario_CC_board.h"
 //Note: to be able to use this function, first of all you should call "VarioCC_DelayTIMInit()" function
+//void VarioCC_NonBlockingDelay_Start(uint16_t delay){
+//	TIM_Cmd(DELAY_TIM, DISABLE);
+//	TIM_SetCounter(DELAY_TIM, 0);
+//	intcounter = delay;
+//	TIM_Cmd(DELAY_TIM, ENABLE);
+//}
 void VarioCC_NonBlockingDelay_Start(uint16_t delay){
-	TIM_Cmd(DELAY_TIM, DISABLE);
-	TIM_SetCounter(DELAY_TIM, 0);
 	intcounter = delay;
-	TIM_Cmd(DELAY_TIM, ENABLE);
 }
 
 

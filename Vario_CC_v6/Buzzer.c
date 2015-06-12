@@ -8,6 +8,8 @@
 #include "Buzzer.h"
 #include "PowerLed.h"            //Note: This application hasn't got additional timer for scheduling ADC converion, 
                                  //      it uses the timer of the buzzer. This way we can spare with consumption.
+#include "PressureSensor.h"      //Note: This application hasn't got additional timer for the barometric sensor, 
+                                 //      it uses the timer of the buzzer. This way we can spare with consumption.
 
 //Initializes GPIOs for the buzzer
 //  - enables periphclock for GPIOs that are used
@@ -111,7 +113,7 @@ void BuzzerTimerandChannelReInit(uint16_t freq){
 //	TIM_Cmd(PULSE_TIM, ENABLE);
 //	TIM_ITConfig(PULSE_TIM, TIM_IT_Update, ENABLE);
 //}
-void PulseTimerInit(uint32_t timclock, uint16_t pfreq){
+void PulseTimerInit(uint32_t timclock){
 	TIM_TimeBaseInitTypeDef timerinitstruct;
 
 	PULSE_RCC_TIM_CMD(ENABLE);
@@ -138,17 +140,17 @@ void PulseChannelInit(){
 }
 
 //Enables interrupt in NVIC for both the channel (TIM_IT_CCx) and the timer (TIM_IT_Update)
-void PulseTimerEnableInterrupts(){
+void PulseTimerEnableInterrupts(FunctionalState NewState){
 	NVIC_InitTypeDef nvicinitstructure;
 	nvicinitstructure.NVIC_IRQChannel = TIM1_BRK_UP_TRG_COM_IRQn;
 	nvicinitstructure.NVIC_IRQChannelPriority = 1;
-	nvicinitstructure.NVIC_IRQChannelCmd = ENABLE;
+	nvicinitstructure.NVIC_IRQChannelCmd = NewState;
 	NVIC_Init(&nvicinitstructure);
 
-	nvicinitstructure.NVIC_IRQChannel = TIM1_CC_IRQn;
+	/*nvicinitstructure.NVIC_IRQChannel = TIM1_CC_IRQn;
 	nvicinitstructure.NVIC_IRQChannelPriority = 0;
 	nvicinitstructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&nvicinitstructure);
+	NVIC_Init(&nvicinitstructure);*/
 }
 
 //Initializes everything about the timer that is needed to make a beep noise on the buzzer
@@ -158,12 +160,12 @@ void PulseTimerEnableInterrupts(){
 void PulseInit(uint16_t pfreq){
 	uint32_t timclock;
 	timclock = VarioCC_GetTimBusClockFreq();
-	PulseTimerInit(timclock, pfreq);
+	PulseTimerInit(timclock);
 //	PulseChannelInit();
-	PulseTimerEnableInterrupts();
+	PulseTimerEnableInterrupts(ENABLE);
 	intbuzzcounter = 0;
 	intbuzzenable = DISABLE;
-	intbuzzthreshold = 25;
+	intbuzzthreshold = 1000;
 }
 
 //Sets the frequency of the beep noise by resetting the timer "PULSE_TIM"
@@ -186,6 +188,7 @@ void PulseInit(uint16_t pfreq){
 //interrupt handler for "PULSE_TIM"
 //it is called of the counter of the timer has reached the period value (set during initialization)
 void TIM1_BRK_UP_TRG_COM_IRQHandler(){
+	//volatile int nop;
 	if (TIM_GetITStatus(PULSE_TIM, TIM_IT_Update) != RESET){
 		TIM_ClearITPendingBit(PULSE_TIM, TIM_IT_Update);
 		if (intbuzzcounter > intbuzzthreshold && intbuzzenable == ENABLE){
@@ -201,8 +204,15 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(){
 			}
 		}
 
+		if (intcounter>0)            //Note: This application hasn't got additional timer for the barometric sensor, 
+			intcounter--;            //      it uses the timer of the buzzer. This way we can spare with consumption.
+
 		adcconvcounter--;            //Note: This application hasn't got additional timer for scheduling ADC converion, 
                                      //      it uses the timer of the buzzer. This way we can spare with consumption.
+	/*	if ((nop=TIM_GetCounter(DELAY_TIM)) >= 2 && doesitsleep == 1){
+			PWR_EnterSleepMode(PWR_SLEEPEntry_WFI);
+		}*/
+
 		/*if (doesitsleep == 1){
 			PWR_EnterSleepMode(PWR_SLEEPEntry_WFI);
 		}*/

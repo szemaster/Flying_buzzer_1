@@ -1,18 +1,18 @@
-﻿Build started 2015.06.09. 11:41:08.
+﻿Build started 2015.06.12. 2:19:49.
      1>Project "D:\Documents\Beagyazott_projektek\Vario_CC_v6\Vario_CC_v6\Vario_CC_v6.vcxproj" on node 2 (Build target(s)).
      1>Build:
          "D:\Program Files (x86)\Sysprogs\VisualGDB\\VisualGDB.exe" /build "D:\Documents\Beagyazott_projektek\Vario_CC_v6\Vario_CC_v6\Vario_CC_v6.vcxproj" "/solution:D:\Documents\Beagyazott_projektek\Vario_CC_v6\Vario_CC_v6.sln" "/config:Debug" "/platform:Win32"
          VisualGDB: Run "cmd.exe /c "D:\SysGCC\arm-eabi\bin\make.exe" CONFIG=Debug" in directory "D:\Documents\Beagyazott_projektek\Vario_CC_v6\Vario_CC_v6" on local computer
          D:\SysGCC\arm-eabi/bin/arm-eabi-gcc.exe -ggdb -ffunction-sections -Os -mcpu=cortex-m0 -mthumb   -IC:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/CMSIS/Device/ST/STM32F0xx/Include -IC:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/CMSIS/Include -IC:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/STM32F0xx_StdPeriph_Driver/inc -DDEBUG -Dstm32_flash_layout -DSTM32F030F4 -DSTM32F030  -c Buzzer.c -o Debug/Buzzer.o -MD -MF Debug/Buzzer.dep
          D:\SysGCC\arm-eabi/bin/arm-eabi-gcc.exe -ggdb -ffunction-sections -Os -mcpu=cortex-m0 -mthumb   -IC:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/CMSIS/Device/ST/STM32F0xx/Include -IC:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/CMSIS/Include -IC:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/STM32F0xx_StdPeriph_Driver/inc -DDEBUG -Dstm32_flash_layout -DSTM32F030F4 -DSTM32F030  -c main.c -o Debug/main.o -MD -MF Debug/main.dep
-         D:\SysGCC\arm-eabi/bin/arm-eabi-gcc.exe -ggdb -ffunction-sections -Os -mcpu=cortex-m0 -mthumb   -IC:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/CMSIS/Device/ST/STM32F0xx/Include -IC:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/CMSIS/Include -IC:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/STM32F0xx_StdPeriph_Driver/inc -DDEBUG -Dstm32_flash_layout -DSTM32F030F4 -DSTM32F030  -c PowerLed.c -o Debug/PowerLed.o -MD -MF Debug/PowerLed.dep
+         D:\SysGCC\arm-eabi/bin/arm-eabi-gcc.exe -ggdb -ffunction-sections -Os -mcpu=cortex-m0 -mthumb   -IC:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/CMSIS/Device/ST/STM32F0xx/Include -IC:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/CMSIS/Include -IC:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/STM32F0xx_StdPeriph_Driver/inc -DDEBUG -Dstm32_flash_layout -DSTM32F030F4 -DSTM32F030  -c PressureSensor.c -o Debug/PressureSensor.o -MD -MF Debug/PressureSensor.dep
          D:\SysGCC\arm-eabi/bin/arm-eabi-g++.exe -o Debug/Vario_CC_v6.elf -Wl,-gc-sections -mcpu=cortex-m0 -mthumb -TC:\Users\Cusi\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F0xxxx/LinkerScripts/STM32F030x4_flash.lds       -Wl,--start-group Debug/BMP180_api.o Debug/Buzzer.o Debug/system_stm32f0xx.o Debug/startup_stm32f0xx.o Debug/stm32f0xx_adc.o Debug/stm32f0xx_can.o Debug/stm32f0xx_cec.o Debug/stm32f0xx_comp.o Debug/stm32f0xx_crc.o Debug/stm32f0xx_crs.o Debug/stm32f0xx_dac.o Debug/stm32f0xx_dbgmcu.o Debug/stm32f0xx_dma.o Debug/stm32f0xx_exti.o Debug/stm32f0xx_flash.o Debug/stm32f0xx_gpio.o Debug/stm32f0xx_i2c.o Debug/stm32f0xx_iwdg.o Debug/stm32f0xx_misc.o Debug/stm32f0xx_pwr.o Debug/stm32f0xx_rcc.o Debug/stm32f0xx_rtc.o Debug/stm32f0xx_spi.o Debug/stm32f0xx_syscfg.o Debug/stm32f0xx_tim.o Debug/stm32f0xx_usart.o Debug/stm32f0xx_wwdg.o Debug/I2C_extension.o Debug/LEDBlink.o Debug/main.o Debug/PowerLed.o Debug/PressureSensor.o Debug/Vario_CC_board.o -lcompactcpp    -Wl,--end-group
          D:\SysGCC\arm-eabi/bin/arm-eabi-objcopy.exe -O binary Debug/Vario_CC_v6.elf Debug/Vario_CC_v6.bin
          ------------------- Memory utilization report -------------------
-         Used FLASH: 14KB out of 16KB (89%) [+4]
-         Used RAM: 1008 bytes out of 4096 bytes (24%)
+         Used FLASH: 14KB out of 16KB (89%)
+         Used RAM: 2244 bytes out of 4096 bytes (54%)
      1>Done Building Project "D:\Documents\Beagyazott_projektek\Vario_CC_v6\Vario_CC_v6\Vario_CC_v6.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:07.72
+Time Elapsed 00:00:08.84

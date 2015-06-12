@@ -131,6 +131,7 @@ void PowerLed_Main(){
 	if (adcconvcounter <= 0){
 	/*if (TIM_GetITStatus(PADC_TIM, TIM_IT_Update) != RESET){
 		TIM_ClearITPendingBit(PADC_TIM, TIM_IT_Update);*/
+		adcconvcounter = PADC_TIMERTURNS;
 
 		PADC_RCC_ADC_CMD(ENABLE);
 
