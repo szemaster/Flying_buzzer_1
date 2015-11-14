@@ -34,9 +34,10 @@ void SHD_Main(){
 	   if(machinestate==1)
 	    	counter--;
 	   if(counter==0){             //turning off sequence
-		   SHD_LEDON;
-		   for(;counterled != 0;counterled--);
+
+		   //for(;counterled != 0;counterled--);
 		   GPIO_ResetBits(SHD_GPIO, SHD_PIN_EN);
+		   SHD_LEDON;
 		   while(1){
 			   asm("nop");
 		   }
