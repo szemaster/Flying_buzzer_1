@@ -21,9 +21,12 @@
 #define PADC_SECBETWEENCONVERSIONS  1      //the time between two consecutive conversion in second
 #define PADC_TIM_PRESCALER          60000  //this is the maximum value of the prescaler
 #define PADC_ADC_SAMPLETIME         ADC_SampleTime_41_5Cycles
-#define PADC_LOWVOLTAGE_LIMIT       534    //PADC_LOWVOLTAGE_LIMIT = 1,2*2^Res/Ulimit, 
+#define PADC_LOWVOLTAGE_LIMIT       506    //This is the voltage, where the "LowVoltage" LED should light up
+                                           //PADC_LOWVOLTAGE_LIMIT = 1024/(2.33/(Ulimit*47/147))
                                            //    where Ulimit is the critical voltage in V
                                            //    Res is the resolution in bits (For example 10)
+#define PADC_SHUTDOWN_VOLTAGE       456    //This is the voltage where the MCU should shut down the system
+                                           //PADC_SHUTDOWN_VOLTAGE = 1024/(2.33/(Ulimit*47/147))
 #define PADC_RECALIBFREQ            0x3    //Frequency of recalibration (MUST BE (POWER OF TWO)-1, 2^n-1)
 
 #define PADC_TIMERTURNS             10000  //A timer is set and executes an interrupt routin in every x ms (right now x=10ms)

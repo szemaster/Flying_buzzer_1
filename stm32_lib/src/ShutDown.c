@@ -36,7 +36,7 @@ void SHD_Main(){
 	   if(counter==0){             //turning off sequence
 
 		   //for(;counterled != 0;counterled--);
-		   GPIO_ResetBits(SHD_GPIO, SHD_PIN_EN);
+		   SHUTDOWN;
 		   SHD_LEDON;
 		   while(1){
 			   asm("nop");

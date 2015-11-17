@@ -23,7 +23,7 @@ int main(void)
 
     while(1)
     {
-    	//PowerLed_Main();
+    	PowerLed_Main();
     	PressureSense_Main();
     	SHD_Main();
     }

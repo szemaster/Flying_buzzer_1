@@ -27,6 +27,8 @@
 #define PLED_PIN                          GPIO_Pin_4
 #define PLED_RCC_GPIO_CMD(NEWSTATE)       RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, NEWSTATE)
 //power ADC that checks the supply voltage
+#define PADC_GPIO                         GPIOA
+#define PADC_PIN                          GPIO_Pin_1
 #define PADC_TIM                          TIM16
 #define PADC_RCC_TIM_CMD(NEWSTATE)        RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM16, NEWSTATE)
 #define PADC_ADC                          ADC1
@@ -39,6 +41,8 @@
 #define SHD_PIN_READ                      GPIO_Pin_3
 #define SHD_RCC(NEWSTATE)                 RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, NEWSTATE)
 #define SHD_LEDON                         GPIO_SetBits(PLED_GPIO, PLED_PIN)
+//shutdownfunction
+#define SHUTDOWN                          GPIO_ResetBits(SHD_GPIO, SHD_PIN_EN);
 
 //buzzer
 #define BUZZ_GPIO_POS                     GPIOA
